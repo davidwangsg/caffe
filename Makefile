@@ -281,7 +281,8 @@ endif
 
 # BLAS configuration (default = ATLAS)
 BLAS ?= atlas
-ifeq ($(BLAS), mkl)
+
+ifeq ($(BLAS),mkl)
 	# MKL
 	LIBRARIES += mkl_rt
 	COMMON_FLAGS += -DUSE_MKL
@@ -293,18 +294,19 @@ else ifeq ($(BLAS), open)
 	LIBRARIES += openblas
 else
 	# ATLAS
-	ifeq ($(LINUX), 1)
+	ifeq ($(LINUX),1)
 		ifeq ($(BLAS), atlas)
 			# Linux simply has cblas and atlas
 			LIBRARIES += cblas atlas
 		endif
-	else ifeq ($(OSX), 1)
+	else ifeq ($(OSX),1)
 		# OS X packages atlas as the vecLib framework
 		BLAS_INCLUDE ?= /System/Library/Frameworks/vecLib.framework/Versions/Current/Headers/
 		LIBRARIES += cblas
 		LDFLAGS += -framework vecLib
 	endif
 endif
+
 INCLUDE_DIRS += $(BLAS_INCLUDE)
 LIBRARY_DIRS += $(BLAS_LIB)
 
@@ -336,6 +338,8 @@ SUPERCLEAN_EXTS := .so .a .o .bin .testbin .pb.cc .pb.h _pb2.py .cuo
 .PHONY: all test clean docs linecount lint lintclean tools examples $(DIST_ALIASES) \
 	py mat py$(PROJECT) mat$(PROJECT) proto runtest \
 	superclean supercleanlist supercleanfiles warn everything
+
+smallall: $(NAME)
 
 all: $(NAME) $(STATIC_NAME) tools examples
 
@@ -614,3 +618,12 @@ $(DISTRIBUTE_DIR): all py $(HXX_SRCS) | $(DISTRIBUTE_SUBDIRS)
 	cp $(STATIC_NAME) $(DISTRIBUTE_DIR)/lib
 	# add python - it's not the standard way, indeed...
 	cp -r python $(DISTRIBUTE_DIR)/python
+
+mydebug:
+	@echo $(BLAS)
+	@echo $(BLAS_INCLUDE)
+	@echo $(COMMON_FLAGS)
+	@echo $(LINUX)
+	@echo $(LIBRARIES)
+	@echo $(TESTSTR)
+	@echo 'LIBRARY_DIRS=' $(LIBRARY_DIRS)

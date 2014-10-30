@@ -22,3 +22,5 @@ wget https://gist.github.com/$GIST/download -O $MODEL_DIR/gist.tar.gz
 tar xzf $MODEL_DIR/gist.tar.gz --directory=$MODEL_DIR --strip-components=1
 rm $MODEL_DIR/gist.tar.gz
 echo "Done"
+
+
